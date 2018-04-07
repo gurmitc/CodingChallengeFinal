@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Coding Challenge</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>     
+        <script>
+            
+            //function gets address from user
+            //displays address and balance
+            function testaddress() {
+                //gets address from user and is  assigned to 'input' variable
+                var input = document.getElementById("userInput").value;
+                //uses input as parameter for blockcypher api and assigns it to 'address' variable
+                var address = 'https://api.blockcypher.com/v1/btc/test3/addrs/' + input + '/balance';
+                console.log(address);
+
+                //call blockcypher api and displays response
+                $.get(address).then(function (d) {
+                    //displays testnet address, and testnet balance
+                    document.getElementById("demo").innerHTML = "Address: " + d.address + "<br /> Balance: Ƀ " + d.balance;
+                });
+    
+                //creates Ƀ100000 transaction between 2 preset testnet addresses
+                //would be in another function but is underdeveloped
+                var newtx = {
+                    inputs: [{addresses: ['mp7FUTdo67MxNJpTUP1EqKGwjkLMJg5Eps']}],
+                    outputs: [{addresses: ['myMErCQHJF9bn3EhbqPxPtvUEqzBkCJYXY'], value: 100000}]
+
+                };
+                $.post('https://api.blockcypher.com/v1/btc/test3/txs/new', JSON.stringify(newtx))
+                        .then(function (d) {
+                            console.log(d);
+                        });
+
+            }
+            ;
+
+        </script>
+    </head>
+    <body>
+        <div id="div1"><h2>Check Tesnet Bitcoin Balance</h2></div>
+        <div> <br>Enter testnet bitcoin address below</div>
+        <div>
+            <form id="form" onsubmit="return false;">
+                <input style="width:40%;" type="text" id="userInput" />
+                <input style="width:10%;" type="submit" onclick="testaddress();" />
+            </form>
+        </div>
+        <p id="demo"></p>
+
+    </body>    
+</html>
